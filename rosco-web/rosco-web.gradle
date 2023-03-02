@@ -5,7 +5,6 @@ apply plugin: "groovy"
 mainClassName = 'com.netflix.spinnaker.rosco.Main'
 
 configurations.all {
-  //exclude group: 'javax.servlet', module: 'servlet-api'
   exclude group: "org.slf4j", module: "slf4j-log4j12"
 }
 
@@ -20,14 +19,15 @@ dependencies {
   implementation "org.springframework.security:spring-security-core"
   compileOnly "org.springframework.boot:spring-boot-starter-actuator"
   implementation "io.spinnaker.kork:kork-config"
+
+
   compileOnly 'org.apache.tomcat:tomcat-servlet-api:11.0.0-M4'
 
   api "org.apache.groovy:groovy:4.0.9"
   implementation "io.spinnaker.kork:kork-artifacts"
   implementation "net.logstash.logback:logstash-logback-encoder:4.11"
   implementation "io.spinnaker.kork:kork-config"
-  //implementation "org.springframework.boot:spring-boot-starter-web"
- // implementation "net.logstash.logback:logstash-logback-encoder"
+
 
   runtimeOnly "io.spinnaker.kork:kork-runtime"
 

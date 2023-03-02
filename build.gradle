@@ -1,5 +1,5 @@
 plugins {
-    id 'io.spinnaker.project' version "$spinnakerGradleVersion" apply false
+  id 'io.spinnaker.project' version "$spinnakerGradleVersion" apply false
 }
 
 allprojects {
@@ -11,22 +11,22 @@ allprojects {
 }
 
 subprojects {
-    group = "io.spinnaker.rosco"
+  group = "io.spinnaker.rosco"
 
-    if (name != "rosco-bom") {
-        apply plugin: 'java-library'
-        apply plugin: "groovy"
+  if (name != "rosco-bom") {
+    apply plugin: 'java-library'
+    apply plugin: "groovy"
 
-        dependencies {
-            implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
+    dependencies {
+      implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
 
-            annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
-            annotationProcessor "org.projectlombok:lombok"
-            annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-            testAnnotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
-            testAnnotationProcessor "org.projectlombok:lombok"
-            testImplementation "org.springframework.boot:spring-boot-starter-test"
-        }
+      annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
+      annotationProcessor "org.projectlombok:lombok"
+      annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+      testAnnotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
+      testAnnotationProcessor "org.projectlombok:lombok"
+      testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+    }
 
         test {
             testLogging {
@@ -56,11 +56,11 @@ subprojects {
         }
     }
 
-    tasks.withType(JavaExec) {
-        if (System.getProperty('DEBUG', 'false') == 'true') {
-            jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8187'
-        }
+  tasks.withType(JavaExec) {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+      jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8187'
     }
+  }
 }
 
 defaultTasks ':rosco-web:run'
