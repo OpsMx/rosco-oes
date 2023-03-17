@@ -16,8 +16,6 @@
 
 package com.netflix.spinnaker.rosco
 
-public class WebConfig {}
-/*
 import com.netflix.spectator.api.Registry
 import com.netflix.spinnaker.filters.AuthenticatedRequestFilter
 import com.netflix.spinnaker.kork.web.interceptors.MetricsInterceptor
@@ -27,17 +25,26 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
+/*
+WebMvcConfigurerAdapter class is deprecated.
+Since Spring 3.1, the WebMvcConfigurerAdapter
+is an implementation of WebMvcConfigurer with empty methods, which allow subclasses to override the needed methods.
+Since Spring 5 with Java 8 baseline allows default methods, the adapter class WebMvcConfigurerAdapter is no longer required.
+ref : https://mkyong.com/spring-mvc/spring-mvc-webmvcconfigureradapter-is-deprecated/
+ */
 @Configuration
 @CompileStatic
-public class WebConfig extends WebMvcConfigurerAdapter {
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer{
 
   @Autowired
   Registry registry
 
-  @Override
+   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(
       new MetricsInterceptor(
@@ -59,4 +66,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
   }
 
 }
-*/
+
