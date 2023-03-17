@@ -18,7 +18,7 @@ class BakeRequest {
 
   // A generated uuid which will identify the request and be used as the jobId when running the bake
   @ApiModelProperty(value = "A generated UUID which will be used to identify the effective packer bake", readOnly = true)
-  final String request_id = UUID.randomUUID().toString()
+   String request_id = UUID.randomUUID().toString()
   String user
   @ApiModelProperty("The package(s) to install, as a space-delimited string") @JsonProperty("package") @SerializedName("package")
   String package_name
