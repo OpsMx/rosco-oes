@@ -4,14 +4,6 @@ apply plugin: "groovy"
 
 
 
-//mainClassName = 'com.netflix.spinnaker.rosco.Main'
-tasks.withType(Copy).all {
-  duplicatesStrategy 'exclude'
-}
-
-task processPackageResources(type: Copy) {
-  duplicatesStrategy = 'exclude'
-}
 
 dependencies {
   implementation project(":rosco-core")
@@ -24,8 +16,6 @@ dependencies {
   compileOnly "org.springframework.boot:spring-boot-starter-actuator"*/
   implementation "io.spinnaker.kork:kork-config:2-0-SNAPSHOT"
   compileOnly 'org.apache.tomcat:tomcat-servlet-api:9.0.37'
-
-
 
   api "org.apache.groovy:groovy:4.0.9"
   implementation "io.spinnaker.kork:kork-artifacts"
@@ -73,4 +63,8 @@ buildDeb {
 
 buildRpm {
   requires('unzip')
+}
+
+tasks.withType(Copy).all {
+  duplicatesStrategy 'exclude'
 }
