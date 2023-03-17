@@ -5,9 +5,9 @@ plugins {
 allprojects {
     apply plugin: 'io.spinnaker.project'
     repositories {mavenCentral()}
-    /*tasks.withType(Copy).all {
+     tasks.withType(Copy).all {
         duplicatesStrategy 'exclude'
-    }*/
+    }
 }
 
 subprojects {

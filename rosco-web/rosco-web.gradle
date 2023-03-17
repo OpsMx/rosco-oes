@@ -65,6 +65,11 @@ buildRpm {
   requires('unzip')
 }
 
-tasks.withType(Copy).all {
-  duplicatesStrategy 'exclude'
+
+tasks.withType(Tar){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Zip){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
