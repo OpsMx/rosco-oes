@@ -14,14 +14,14 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter-security"
   implementation "org.springframework.security:spring-security-core"
   compileOnly "org.springframework.boot:spring-boot-starter-actuator"*/
-  implementation "io.spinnaker.kork:kork-config:2-0-SNAPSHOT"
+  implementation "io.spinnaker.kork:kork-config"
   compileOnly 'org.apache.tomcat:tomcat-servlet-api:9.0.37'
 
   api "org.apache.groovy:groovy:4.0.9"
   implementation "io.spinnaker.kork:kork-artifacts"
   implementation "net.logstash.logback:logstash-logback-encoder:4.11"
 
-  runtimeOnly "io.spinnaker.kork:kork-runtime:2-0-SNAPSHOT"
+  runtimeOnly "io.spinnaker.kork:kork-runtime"
 
   testImplementation "com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0"
   testImplementation "io.spinnaker.kork:kork-retrofit"
