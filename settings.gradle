@@ -1,15 +1,3 @@
-
-
-if (spinnakerGradleVersion.endsWith('-SNAPSHOT')) {
-    pluginManagement {
-        repositories {
-            mavenLocal()
-            gradlePluginPortal()
-        }
-    }
-}
-
-
 ['kork'].each { prj ->
     String propName = "${prj}Composite"
     String projectPath = "../$prj"
@@ -17,56 +5,6 @@ if (spinnakerGradleVersion.endsWith('-SNAPSHOT')) {
         includeBuild projectPath
     }
 }
-
-
-/*
-
-include(
-        "spinnaker-dependencies",
-        "kork-actuator",
-        "kork-annotations",
-        "kork-api",
-        "kork-artifacts",
-        "kork-aws",
-        "kork-bom",
-        "kork-cloud-config-server",
-        "kork-config",
-        "kork-core",
-        "kork-core-tck",
-        "kork-credentials",
-        "kork-credentials-api",
-        "kork-eureka",
-        "kork-exceptions",
-        "kork-expressions",
-        "kork-jedis",
-        "kork-jedis-test",
-        "kork-moniker",
-        "kork-plugins",
-        "kork-plugins-api",
-        "kork-plugins-tck",
-        "kork-plugins-spring-api",
-        "kork-proto",
-        "kork-pubsub",
-        "kork-pubsub-aws",
-        "kork-runtime",
-        "kork-secrets",
-        "kork-secrets-aws",
-        "kork-secrets-gcp",
-        "kork-security",
-        "kork-retrofit",
-        "kork-retrofit2",
-        "kork-sql",
-        "kork-sql-test",
-        "kork-stackdriver",
-        "kork-swagger",
-        "kork-telemetry",
-        "kork-test",
-        "kork-tomcat",
-        "kork-web",
-)
-
-*/
-
 
 enableFeaturePreview("VERSION_ORDERING_V2")
 
@@ -83,4 +21,14 @@ def setBuildFile(project) {
 
 rootProject.children.each {
     setBuildFile(it)
+}
+
+if (spinnakerGradleVersion.endsWith('-SNAPSHOT')) {
+    pluginManagement {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
 }
