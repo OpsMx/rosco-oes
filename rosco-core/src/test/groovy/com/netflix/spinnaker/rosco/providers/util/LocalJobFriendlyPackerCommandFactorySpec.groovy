@@ -1,6 +1,5 @@
 package com.netflix.spinnaker.rosco.providers.util
-class LocalJobFriendlyPackerCommandFactorySpec {}
-/*
+
 
 import com.netflix.spinnaker.rosco.config.RoscoPackerConfigurationProperties
 import com.netflix.spinnaker.rosco.jobs.JobRequest
@@ -93,4 +92,4 @@ class LocalJobFriendlyPackerCommandFactorySpec extends Specification implements 
       [packages: "package1 package2", secret: "mysecret"]       | ["secret"]             | ["packer", "build", "-color=false", "-var", "packages=package1 package2", "-var", "secret=******"]
   }
 }
-*/
+

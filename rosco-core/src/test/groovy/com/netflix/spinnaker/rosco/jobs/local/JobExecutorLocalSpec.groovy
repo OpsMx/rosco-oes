@@ -1,7 +1,6 @@
 package com.netflix.spinnaker.rosco.jobs.local
 
-class JobExecutorLocalSpec {}
-/*
+
 import com.netflix.spectator.api.DefaultRegistry
 import com.netflix.spinnaker.rosco.api.BakeStatus
 import com.netflix.spinnaker.rosco.jobs.JobRequest
@@ -51,7 +50,7 @@ class JobExecutorLocalSpec extends Specification implements TestDefaults {
     Final output
   '''.stripIndent()
 
-  @Unroll
+ /* @Unroll
   void 'job executor runs command and captures stdout and stderr with combineStdOutAndErr set to #combineStdOutAndErr'() {
     setup:
       def jobRequest = new JobRequest(
@@ -81,6 +80,6 @@ class JobExecutorLocalSpec extends Specification implements TestDefaults {
       combineStdOutAndErr | expectedOutput  | expectedLogs
       true                | COMBINED_OUTPUT | COMBINED_OUTPUT
       false               | EXPECTED_OUTPUT | EXPECTED_LOGS
-  }
+  }*/
 }
-*/
+

@@ -15,8 +15,7 @@
  */
 
 package com.netflix.spinnaker.rosco.providers.docker
-class DockerBakeHandlerSpec {}
-/*
+
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.netflix.spinnaker.rosco.api.Bake
@@ -413,4 +412,4 @@ class DockerBakeHandlerSpec extends Specification implements TestDefaults {
   }
 
 }
-*/
+

@@ -15,8 +15,7 @@
  */
 
 package com.netflix.spinnaker.rosco.providers.util
-class PackerManifestServiceSpec {}
-/*
+
 
 import spock.lang.Specification
 
@@ -34,4 +33,4 @@ class PackerManifestServiceSpec extends Specification implements TestDefaults {
       fileName == "/path/to/tmp/test-bake-id-manifest.json"
   }
 }
-*/
+

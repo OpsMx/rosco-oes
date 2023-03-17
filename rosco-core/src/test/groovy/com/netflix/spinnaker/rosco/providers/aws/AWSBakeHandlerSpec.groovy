@@ -15,9 +15,7 @@
  */
 
 package com.netflix.spinnaker.rosco.providers.aws
-class AWSBakeHandlerSpec {}
 
-/*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.netflix.spinnaker.kork.core.RetrySupport
 import com.netflix.spinnaker.rosco.api.Bake
@@ -1442,7 +1440,7 @@ class AWSBakeHandlerSpec extends Specification implements TestDefaults {
       1 * imageNameFactoryMock.buildPackagesParameter(DEB_PACKAGE_TYPE, osPackages) >> fullyQualifiedPackageName
       1 * packerCommandFactoryMock.buildPackerCommand("", parameterMap, null, "$configDir/$awsBakeryDefaults.templateFile")
   }
-
+/*
   void 'getMaskedPackerParameters returns the expected default'() {
     setup:
       @Subject
@@ -1453,7 +1451,7 @@ class AWSBakeHandlerSpec extends Specification implements TestDefaults {
 
     then:
       maskedPackerParams == [ 'aws_access_key', 'aws_secret_key' ]
-  }
+  }*/
 
   void 'getMaskedPackerParameters returns the expected default'() {
     setup:
@@ -1473,4 +1471,3 @@ class AWSBakeHandlerSpec extends Specification implements TestDefaults {
     void sleep(long time) {}
   }
 }
-*/

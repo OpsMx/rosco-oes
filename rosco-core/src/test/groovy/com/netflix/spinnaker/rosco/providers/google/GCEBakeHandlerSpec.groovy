@@ -15,8 +15,7 @@
  */
 
 package com.netflix.spinnaker.rosco.providers.google
-class GCEBakeHandlerSpec {}
-/*
+
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.netflix.spinnaker.rosco.api.Bake
@@ -1098,4 +1097,4 @@ class GCEBakeHandlerSpec extends Specification implements TestDefaults{
       bakeKey == "bake:gce:centos:kato|nflx-djangobase-enhanced_0.1-h12.170cdbd_all|mongodb:my-other-google-account"
   }
 }
-*/
+

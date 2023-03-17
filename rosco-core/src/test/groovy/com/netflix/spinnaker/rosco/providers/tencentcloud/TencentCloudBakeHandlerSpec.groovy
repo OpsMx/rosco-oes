@@ -15,8 +15,7 @@
  */
 
 package com.netflix.spinnaker.rosco.providers.tencentcloud
-class TencentCloudBakeHandlerSpec {}
-/*
+
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.netflix.spinnaker.rosco.api.Bake
@@ -458,4 +457,3 @@ class TencentCloudBakeHandlerSpec extends Specification implements TestDefaults 
         1 * packerCommandFactoryMock.buildPackerCommand("", parameterMap, null, "$configDir/$tencentCloudBakeryDefaults.templateFile")
     }
 }
-*/

@@ -1,7 +1,6 @@
 package com.netflix.spinnaker.rosco.providers.util.packagespecific
 
-class NupkgPackageUtilSpec {}
-/*
+
 import com.netflix.spinnaker.rosco.providers.util.PackageNameConverter
 import com.netflix.spinnaker.rosco.providers.util.TestDefaults
 import spock.lang.Specification
@@ -75,4 +74,4 @@ class NupkgPackageUtilSpec extends Specification implements TestDefaults {
 
   }
 }
-*/
+
