@@ -1,47 +1,128 @@
+
+
 plugins {
-  id 'io.spinnaker.project' version "$spinnakerGradleVersion" apply false
+    id 'io.spinnaker.project' version "$spinnakerGradleVersion" apply false
+    // id "org.jetbrains.kotlin.jvm" version "$kotlinVersion" apply false
+    //id "io.gitlab.arturbosch.detekt" version "1.17.1" apply false
+    // id 'org.jetbrains.kotlin.plugin.allopen' version "$kotlinVersion" apply false
+    id 'org.springframework.boot' version '3.0.0' apply true
+//  id 'io.spinnaker.kork' version "$korkVersion" apply false
+
 }
 
+//sourceCompatibility = JavaVersion.VERSION_17
+//targetCompatibility = JavaVersion.VERSION_17
+/* java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+*/
+
 allprojects {
-  apply plugin: 'io.spinnaker.project'
+    apply plugin: 'io.spinnaker.project'
+    //apply plugin: 'io.spinnaker.kork'
+
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    tasks.withType( Copy).all {
+        duplicatesStrategy 'exclude'
+    }
+
+
 }
 
 subprojects {
-  group = "io.spinnaker.rosco"
-
-  if (name != "rosco-bom") {
-    apply plugin: 'java-library'
-    apply plugin: "groovy"
-
-    dependencies {
-      implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
-
-      annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
-      annotationProcessor "org.projectlombok:lombok"
-      annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-      testAnnotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
-      testAnnotationProcessor "org.projectlombok:lombok"
-    }
-
-    test {
-      testLogging {
-        exceptionFormat = 'full'
-      }
-    }
-  }
-
-  if (korkVersion.endsWith("-SNAPSHOT")) {
-    logger.info("Enabling mavenLocal")
+    group = "io.spinnaker.rosco"
     repositories {
-      mavenLocal()
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
     }
-  }
 
-  tasks.withType(JavaExec) {
-    if (System.getProperty('DEBUG', 'false') == 'true') {
-      jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8187'
+    //apply plugin: 'com.diffplug.spotless'
+
+    if (name != "rosco-bom") {
+        apply plugin: 'java-library'
+        apply plugin: "groovy"
+
+        /*spotless {
+          java {
+            googleJavaFormat('1.15.0')
+            eclipse().configFile(rootProject.file('codestyle.xml'))
+          }
+        }*/
+
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+        }
+
+        dependencies {
+            implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
+
+            annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
+            annotationProcessor platform("com.google.googlejavaformat:google-java-format:1.15.0")
+
+//      annotationProcessor(platform(project(":spinnaker-dependencies")))
+            //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+            annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
+            annotationProcessor "org.projectlombok:lombok:1.18.24"
+            //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+            testAnnotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
+            testAnnotationProcessor "org.projectlombok:lombok:1.18.24"
+
+            implementation gradleApi()
+            implementation localGroovy()
+        }
+
+        test {
+            testLogging {
+                exceptionFormat = 'full'
+            }
+            useJUnitPlatform()
+        }
+
+        tasks.withType( Copy).all {
+            duplicatesStrategy 'exclude'
+        }
     }
-  }
+
+    if (korkVersion.endsWith("-SNAPSHOT")) {
+        logger.info("Enabling mavenLocal")
+        repositories {
+            mavenLocal()
+        }
+    }
+
+    tasks.withType(JavaExec) {
+        if (System.getProperty('DEBUG', 'false') == 'true') {
+            jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8187'
+        }
+    }
+    tasks.withType(Copy).all {
+        duplicatesStrategy 'exclude'
+    }
 }
 
 defaultTasks ':rosco-web:run'
+
+/*
+rootProject.tasks.named("processResources") {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}*/
+
+/*
+task processPackageResources(type: Copy) {
+  duplicatesStrategy = 'exclude'
+}
+*/
+task processPackageResources(type: Copy) {
+    duplicatesStrategy = 'exclude'
+}

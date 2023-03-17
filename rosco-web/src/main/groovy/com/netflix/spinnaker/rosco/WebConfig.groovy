@@ -16,6 +16,8 @@
 
 package com.netflix.spinnaker.rosco
 
+public class WebConfig {}
+/*
 import com.netflix.spectator.api.Registry
 import com.netflix.spinnaker.filters.AuthenticatedRequestFilter
 import com.netflix.spinnaker.kork.web.interceptors.MetricsInterceptor
@@ -57,3 +59,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
   }
 
 }
+*/
