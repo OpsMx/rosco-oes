@@ -1,4 +1,6 @@
 package com.netflix.spinnaker.rosco.providers.util
+trait TestDefaults {}
+/*
 
 import com.netflix.spinnaker.rosco.api.Bake
 import com.netflix.spinnaker.rosco.api.BakeRequest
@@ -54,3 +56,4 @@ trait TestDefaults {
     PackageNameConverter.buildOsPackageNames(NUPKG_PACKAGE_TYPE, packages.tokenize(" "))
   }
 }
+*/

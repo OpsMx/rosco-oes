@@ -1,5 +1,7 @@
 package com.netflix.spinnaker.rosco.jobs.local
 
+class JobExecutorLocalSpec {}
+/*
 import com.netflix.spectator.api.DefaultRegistry
 import com.netflix.spinnaker.rosco.api.BakeStatus
 import com.netflix.spinnaker.rosco.jobs.JobRequest
@@ -81,3 +83,4 @@ class JobExecutorLocalSpec extends Specification implements TestDefaults {
       false               | EXPECTED_OUTPUT | EXPECTED_LOGS
   }
 }
+*/

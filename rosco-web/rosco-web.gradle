@@ -33,11 +33,11 @@ dependencies {
 
   runtimeOnly "io.spinnaker.kork:kork-runtime:2-0-SNAPSHOT"
 
-  testImplementation "com.jakewharton.retrofit:retrofit1-okhttp3-client"
+  testImplementation "com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0"
   testImplementation "io.spinnaker.kork:kork-retrofit"
   testImplementation "org.spockframework:spock-core"
   testImplementation "org.springframework.boot:spring-boot-starter-test"
-  testImplementation "org.objenesis:objenesis"
+  testImplementation "org.objenesis:objenesis:3.2"
   testImplementation "org.springframework.boot:spring-boot-starter-web"
   testImplementation "org.springframework.boot:spring-boot-starter-actuator"
 }
