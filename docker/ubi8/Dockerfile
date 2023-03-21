@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/openjdk-17
+FROM registry.access.redhat.com/ubi8-minimal:8.5
 MAINTAINER sig-platform@spinnaker.io
 COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
