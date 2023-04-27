@@ -14,7 +14,10 @@ spectator:
   applicationName: ${spring.application.name}
   webEndpoint:
     enabled: false
-
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
 packer:
   # Set this if running Packer >= 1.4.0 for timestamp prepended output
   timestamp: false
@@ -517,3 +520,12 @@ springfox:
   documentation:
     swagger-ui:
       enabled:true
+#springdoc.swagger-ui.path: /rosco-documentation
+#springdoc.api-docs.path: /rosco-api-docs
+springdoc.swagger-ui.tryItOutEnabled: true
+springdoc.pathsToMatch : /api/v1.*, /api/v2.*, /bakeOptions.*, /status.*
+springdoc.swagger-ui.filter: true
+
+#logging:
+#  level:
+#    root: DEBUG
