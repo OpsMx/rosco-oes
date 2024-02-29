@@ -513,7 +513,11 @@ swagger:
     - /api/v2.*
     - /bakeOptions.*
     - /status.*
-springfox:
-  documentation:
-    swagger-ui:
-      enabled:true
+springdoc:
+  writer-with-default-pretty-printer: true
+  swagger-ui:
+    display-request-duration: true
+    disable-swagger-default-url: true
+    url: /v3/api-docs.yaml
+  api-docs:
+    version: openapi_3_0
