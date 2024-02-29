@@ -68,7 +68,7 @@ public class WebConfig implements WebMvcConfigurer {
     String baseUrl = StringUtils.trimTrailingCharacter(this.baseUrl, '/' as char);
     registry.
             addResourceHandler(baseUrl + "/swagger-ui/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/springdoc-swagger-ui/")
             .resourceChain(false);
   }
 

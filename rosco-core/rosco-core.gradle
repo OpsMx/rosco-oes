@@ -7,10 +7,6 @@ dependencies {
   api "io.spinnaker.kork:kork-artifacts"
   api "io.spinnaker.kork:kork-plugins"
   api "org.apache.groovy:groovy:4.0.9"
-/*  api("io.springfox:springfox-swagger-ui:2.9.2")
-  api("io.springfox:springfox-swagger2:2.9.2")*/
-  implementation ("io.springfox:springfox-boot-starter:3.0.0")
-  implementation("io.swagger.core.v3:swagger-annotations:2.2.8")
   implementation "com.netflix.frigga:frigga:0.26.0"
   implementation "io.spinnaker.kork:kork-jedis"
   implementation "io.spinnaker.kork:kork-retrofit"
