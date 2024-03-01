@@ -39,7 +39,7 @@ COPY jaeger/opentelemetry-javaagent.jar /opt/jaeger/opentelemetry-javaagent.jar
 
 ENV KUSTOMIZE_VERSION=5.0.3
 
-ENV PACKER_VERSION=1.9.1
+ENV PACKER_VERSION=1.10.1
 
 WORKDIR /packer
 
@@ -48,6 +48,7 @@ WORKDIR /packer
 RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
   wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
+  packer init . && \
   rm packer_${PACKER_VERSION}_linux_amd64.zip
  
 
