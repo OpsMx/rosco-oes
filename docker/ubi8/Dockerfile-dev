@@ -43,15 +43,10 @@ ENV PACKER_VERSION=1.10.1
 
 WORKDIR /packer
 
-
-
 RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
   wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
-  packer init . && \
   rm packer_${PACKER_VERSION}_linux_amd64.zip
- 
-
 
 ENV PATH "/packer:$PATH"
 
@@ -94,4 +89,15 @@ RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASEVERSION}-SNAPSHO
 RUN chmod -R 777 /opt/rosco/plugins/
 RUN chown -R spinnaker:spinnaker /opt/
 USER spinnaker
+
+# Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
+ARG PACKER_PLUGINS="amazon azure googlecompute"
+RUN for plugin in $PACKER_PLUGINS ; do \
+  if [ -f /run/secrets/github_token ]; then \
+    PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
+  else \
+    packer plugins install "github.com/hashicorp/$plugin"; \
+  fi; \
+done
+
 CMD ["/opt/rosco/bin/rosco"]
