@@ -30,7 +30,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
+import org.springframework.context.annotation.Lazy
 
 @Configuration
 @ConditionalOnProperty('google.enabled')
@@ -40,7 +41,7 @@ class RoscoGoogleConfiguration {
   @Autowired
   CloudProviderBakeHandlerRegistry cloudProviderBakeHandlerRegistry
 
-  @Autowired
+  @Lazy @Autowired
   GCEBakeHandler gceBakeHandler
 
   @Bean

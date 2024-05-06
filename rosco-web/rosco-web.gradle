@@ -3,7 +3,6 @@ apply plugin: 'io.spinnaker.package'
 mainClassName = 'com.netflix.spinnaker.rosco.Main'
 
 configurations.all {
-  exclude group: 'javax.servlet', module: 'servlet-api'
   exclude group: "org.slf4j", module: "slf4j-log4j12"
 }
 
@@ -11,12 +10,15 @@ dependencies {
   implementation project(":rosco-core")
   implementation project(":rosco-manifests")
   implementation "io.spinnaker.kork:kork-web"
-  implementation "io.swagger:swagger-annotations"
+  implementation "io.spinnaker.kork:kork-swagger"
 
-  implementation "org.codehaus.groovy:groovy"
+  implementation "org.apache.groovy:groovy"
   implementation "io.spinnaker.kork:kork-artifacts"
   implementation "io.spinnaker.kork:kork-config"
   implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.security:spring-security-core"
+    compileOnly "org.springframework.boot:spring-boot-starter-actuator"
   implementation "net.logstash.logback:logstash-logback-encoder"
 
   runtimeOnly "io.spinnaker.kork:kork-runtime"
@@ -58,4 +60,13 @@ buildDeb {
 
 buildRpm {
   requires('unzip')
+}
+
+
+tasks.withType(Tar){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Zip){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

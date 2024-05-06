@@ -20,3 +20,20 @@ def setBuildFile(project) {
 rootProject.children.each {
   setBuildFile(it)
 }
+
+if (spinnakerGradleVersion.endsWith('-SNAPSHOT')) {
+    pluginManagement {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+             maven{
+                url "https://nexus.opsmx.net/repository/maven-snapshots/"
+                 credentials {
+                    username = "NEXUS_USERNAME"
+                    password = "NEXUS_PASSWORD"
+                         }
+            }
+        }
+    }
+}

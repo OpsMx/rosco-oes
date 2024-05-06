@@ -35,6 +35,7 @@ import com.netflix.spinnaker.rosco.providers.huaweicloud.config.RoscoHuaweiCloud
 import com.netflix.spinnaker.rosco.providers.oracle.config.RoscoOracleConfiguration
 import com.netflix.spinnaker.rosco.providers.tencentcloud.config.RoscoTencentCloudConfiguration
 import com.netflix.spinnaker.rosco.services.ServiceConfig
+import jakarta.servlet.Filter
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration
@@ -50,7 +51,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.filter.ShallowEtagHeaderFilter
 import com.netflix.spinnaker.kork.boot.DefaultPropertiesBuilder
 
-import javax.servlet.Filter
 
 @Configuration
 @ComponentScan([

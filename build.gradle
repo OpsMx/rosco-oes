@@ -3,7 +3,11 @@ plugins {
 }
 
 allprojects {
-  apply plugin: 'io.spinnaker.project'
+    apply plugin: 'io.spinnaker.project'
+    repositories {mavenCentral()}
+     tasks.withType(Copy).all {
+        duplicatesStrategy 'exclude'
+    }
 }
 
 subprojects {
@@ -32,12 +36,19 @@ subprojects {
     }
   }
 
-  if (korkVersion.endsWith("-SNAPSHOT")) {
-    logger.info("Enabling mavenLocal")
-    repositories {
-      mavenLocal()
+    if (korkVersion.endsWith("-SNAPSHOT")) {
+        logger.info("Enabling mavenLocal")
+        repositories {
+            mavenLocal()
+             maven{
+                url "https://nexus.opsmx.net/repository/maven-snapshots/"
+                 credentials {
+                    username = "NEXUS_USERNAME"
+                    password = "NEXUS_PASSWORD"
+                         }
+            }
+        }
     }
-  }
 
   tasks.withType(JavaExec) {
     if (System.getProperty('DEBUG', 'false') == 'true') {
@@ -47,7 +58,7 @@ subprojects {
 
   tasks.withType(JavaCompile).configureEach {
     javaCompiler = javaToolchains.compilerFor {
-      languageVersion = JavaLanguageVersion.of(11)
+      languageVersion = JavaLanguageVersion.of(17)
     }
   }
   tasks.withType(Test).configureEach {
