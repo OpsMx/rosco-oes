@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import io.swagger.annotations.ApiModelProperty
 import com.netflix.spinnaker.kork.artifacts.model.Artifact
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * The details of a completed bake.
@@ -32,7 +32,7 @@ import com.netflix.spinnaker.kork.artifacts.model.Artifact
 @EqualsAndHashCode(includes = "id")
 @ToString(includeNames = true)
 class Bake {
-  @ApiModelProperty(value="The id of the bake job.")
+  @Schema(description = "The id of the bake job.")
   String id
   String ami
   String image_name
