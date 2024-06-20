@@ -23,7 +23,7 @@ ENV JAVA_HOME=/opsmx-java-runtime \
     PATH=${PATH}:/opsmx-java-runtime/bin \
     WORK_DIR=/opsmx/workdir \
     CONF_DIR=/opsmx/conf
-
+ENV  SERVICE_PLUGIN_PATH=/opt/rosco/plugins
 # Enabling fips mode
 RUN fips-mode-setup --enable
 
@@ -67,22 +67,21 @@ ENV PATH "kustomize:$PATH"
 RUN yum -y remove clean all && rm -rf /var/cache
 
 RUN useradd spinnaker
-RUN mkdir -p /opt/rosco/plugins
+RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
 #custom plugin zip files adding
+
+ARG CUSTOMPLUGIN_RELEASE_VERSION
+ENV CUSTOMPLUGIN_RELEASE_VERSION=$CUSTOMPLUGIN_RELEASE_VERSION
 ARG CUSTOMPLUGIN_RELEASEORG
 ENV CUSTOMPLUGIN_RELEASEORG=$CUSTOMPLUGIN_RELEASEORG
-
 ARG CUSTOMPLUGIN_RELEASEREPO
 ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
 
-ARG CUSTOMPLUGIN_RELEASEVERSION
-ENV CUSTOMPLUGIN_RELEASEVERSION=$CUSTOMPLUGIN_RELEASEVERSION
+RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}.zip -P ${SERVICE_PLUGIN_PATH}
+RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
 
-RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASEVERSION}-SNAPSHOT.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/${CUSTOMPLUGIN_RELEASEVERSION}/armory-observability-plugin-${CUSTOMPLUGIN_RELEASEVERSION}.zip -P /opt/rosco/plugins
-RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASEVERSION}-SNAPSHOT.zip /opt/rosco/plugins/
-
-RUN chmod -R 777 /opt/rosco/plugins/
+RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
 RUN chown -R spinnaker:spinnaker /opt/
 RUN yum -y remove tar vim vi
 USER spinnaker
