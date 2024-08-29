@@ -51,6 +51,283 @@ defaultCloudProviderType: aws
 
 templatesNeedingRoot: aws-chroot.json
 
+alicloud:
+  # The property referenced below, ALICLOUD_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to either replace ALICLOUD_ENABLED
+  # with SPINNAKER_ALICLOUD_ENABLED or to explicitly set the property's value
+  # to true.
+  enabled: ${ALICLOUD_ENABLED:false}
+  bakeryDefaults:
+    baseImages:
+      - baseImage:
+          id: ubuntu-1604
+          shortDescription: v16.04
+          detailedDescription: Ubuntu v16.04
+          packageType: deb
+          templateFile: alicloud.json
+        virtualizationSettings:
+          - region: cn-hangzhou
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_16_04_64_20G_alibase_20190620.vhd
+            sshUserName: root
+          - region: cn-shanghai
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_16_04_64_20G_alibase_20190620.vhd
+            sshUserName: root
+          - region: eu-central-1
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_16_04_64_20G_alibase_20190620.vhd
+            sshUserName: root
+      - baseImage:
+          id: ubuntu-1804
+          shortDescription: v18.04
+          detailedDescription: Ubuntu v18.04
+          packageType: deb
+          templateFile: alicloud.json
+        virtualizationSettings:
+          - region: cn-hangzhou
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_18_04_64_20G_alibase_20190624.vhd
+            sshUserName: root
+          - region: cn-shanghai
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_18_04_64_20G_alibase_20190624.vhd
+            sshUserName: root
+          - region: eu-central-1
+            instanceType: ecs.c5.large
+            sourceImage: ubuntu_18_04_64_20G_alibase_20190624.vhd
+            sshUserName: root
+
+azure:
+  # The property referenced below, AZURE_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to explicitly set the property's
+  # value to true.
+  enabled: ${AZURE_ENABLED:false}
+  bakeryDefaults:
+    templateFile: azure-linux.pkr.hcl
+    baseImages:
+    - baseImage:
+        id: ubuntu-1604
+        shortDescription: v16.04
+        detailedDescription: Ubuntu Server 16.04-LTS
+        publisher: Canonical
+        offer: UbuntuServer
+        sku: 16.04-LTS
+        version: 16.04.201612140
+        osType: Linux
+        packageType: deb
+    - baseImage:
+        id: ubuntu-1804
+        shortDescription: v18.04
+        detailedDescription: Ubuntu Server 18.04-LTS
+        publisher: Canonical
+        offer: UbuntuServer
+        sku: 18.04-LTS
+#        sku: 18_04-lts-gen2
+        version: 18.04.201804262
+        osType: Linux
+        packageType: deb
+    - baseImage:
+        id: ubuntu-1404
+        shortDescription: v14.04
+        detailedDescription: Ubuntu Server 14.04.5-LTS
+        publisher: Canonical
+        offer: UbuntuServer
+        sku: 14.04.5-LTS
+        version: 14.04.201612130
+        osType: Linux
+        packageType: deb
+    - baseImage:
+        id: centos
+        shortDescription: 7
+        detailedDescription: OpenLogic CentOS 7.5
+        publisher: OpenLogic
+        offer: CentOS
+        sku: 7.5
+        version: latest
+        osType: Linux
+        packageType: rpm
+    - baseImage:
+        id: windows-2012-r2
+        shortDescription: 2012 R2
+        detailedDescription: Windows Server 2012 R2 Datacenter
+        publisher: MicrosoftWindowsServer
+        offer: WindowsServer
+        sku: 2012-R2-Datacenter
+        version: 4.0.20170111
+        osType: windows
+        packageType: nupkg
+        templateFile: azure-windows.pkr.hcl
+
+
+docker:
+  # The property referenced below, DOCKER_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to explicitly set the property's
+  # value to true.
+  enabled: ${DOCKER_ENABLED:false}
+  bakeryDefaults:
+    targetRepository: ${DOCKER_TARGET_REPOSITORY:}
+    templateFile: docker.json
+    baseImages:
+    - baseImage:
+        id: precise
+        shortDescription: v12.04
+        detailedDescription: Ubuntu Precise Pangolin v12.04
+        packageType: deb
+      virtualizationSettings:
+        sourceImage: ubuntu:precise
+    - baseImage:
+        id: trusty
+        shortDescription: v14.04
+        detailedDescription: Ubuntu Trusty Tahr v14.04
+        packageType: deb
+      virtualizationSettings:
+        sourceImage: ubuntu:trusty
+
+google:
+  # The property referenced below, GOOGLE_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to either replace GOOGLE_ENABLED
+  # with SPINNAKER_GOOGLE_ENABLED or to explicitly set the property's value
+  # to true.
+  enabled: ${GOOGLE_ENABLED:false}
+  bakeryDefaults:
+    zone: us-central1-f
+    network: default
+    useInternalIp: false
+    templateFile: gce.json
+    baseImages:
+    # Either sourceImage or sourceImageFamily should be set. If both are set, sourceImage will take precedence.
+    # If you specify isImageFamily, deck will annotate the popup tooltip to indicate that the selected option
+    # represents an image family.
+    #
+    # This is an example of configuring a source image family:
+    # - baseImage:
+    #     id: precise
+    #     shortDescription: v14.04
+    #     detailedDescription: Ubuntu Trusty Tahr v14.04
+    #     packageType: deb
+    #     isImageFamily: true
+    #   virtualizationSettings:
+    #     sourceImageFamily: ubuntu-1204-lts
+    #
+    # This is an example of configuring an explicit source image, as opposed to a source image family:
+    # - baseImage:
+    #     id: precise
+    #     shortDescription: v14.04
+    #     detailedDescription: Ubuntu Trusty Tahr v14.04
+    #     packageType: deb
+    #   virtualizationSettings:
+    #     sourceImage: ubuntu-1404-trusty-v20170517
+    - baseImage:
+        id: xenial
+        shortDescription: v16.04
+        detailedDescription: Ubuntu Xenial Xerus v16.04
+        packageType: deb
+        isImageFamily: true
+      virtualizationSettings:
+        sourceImageFamily: ubuntu-1604-lts
+    - baseImage:
+        id: bionic
+        shortDescription: v18.04
+        detailedDescription: Ubuntu Bionic Beaver v18.04
+        packageType: deb
+        isImageFamily: true
+      virtualizationSettings:
+        sourceImageFamily: ubuntu-1804-lts
+
+huaweicloud:
+  # The property referenced below, HUAWEICLOUD_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to explicitly set the property's
+  # value to true.
+  enabled: ${HUAWEICLOUD_ENABLED:false}
+  bakeryDefaults:
+    authUrl: ${HUAWEICLOUD_AUTH_URL:}
+    username: ${HUAWEICLOUD_USERNAME:}
+    password: ${HUAWEICLOUD_PASSWORD:}
+    projectName: ${HUAWEICLOUD_PROJECT_NAME:''}
+    domainName: ${HUAWEICLOUD_DOMAIN_NAME:''}
+    insecure: ${HUAWEICLOUD_INSECURE:false}
+    vpcId: ${HUAWEICLOUD_VPC_ID:}
+    subnetId: ${HUAWEICLOUD_SUBNET_ID:}
+    eipBandwidthSize: ${HUAWEICLOUD_EIP_BANDWIDTH_SIZE:2}
+    securityGroup: ${HUAWEICLOUD_SECURITY_GROUP:}
+    templateFile: huaweicloud.json
+    baseImages:
+    # sourceImageId is the unique UUID of an huaweicloud image in a region,
+    # and can be found via console or the image api.
+    # It is immutable for the life of the image.
+    - baseImage:
+        id: ubuntu-1604
+        shortDescription: v16.04
+        detailedDescription: Ubuntu v16.04
+        packageType: deb
+      virtualizationSettings:
+      - region: cn-north-1
+        instanceType: s3.small.1
+        sourceImageId: f1dd2272-7041-479e-9663-646632b6ac00
+        sshUserName: ubuntu
+        eipType: 5_bgp
+
+tencentcloud:
+  # The property referenced below, TENCENT_ENABLED, is not set in the
+  # 'unified config' supported by the spinnaker/spinnaker project. If you
+  # copy/paste this section into a new rosco-local.yml file for use with a
+  # pre-built Spinnaker image, make sure to explicitly set the property's
+  # value to true.
+  enabled: ${TENCENTCLOUD_ENABLED:false}
+  bakeryDefaults:
+    secretId: ${TENCENTCLOUD_SECRET_ID:}
+    secretKey: ${TENCENTCLOUD_SECRET_KEY:}
+    # You can specify the templateFile used for this baseImage.
+    # If not specified, the default templateFile will be used.
+    templateFile: tencentcloud.json
+    baseImages:
+      - baseImage:
+          id: ubuntu-1604
+          shortDescription: v16.04
+          detailedDescription: Ubuntu Server 16.04.1-LTS 64bits
+          packageType: deb
+          osType: linux
+        virtualizationSettings:
+          - region: ap-guangzhou
+            zone: ap-guangzhou-3
+            instanceType: S3.SMALL1
+            sourceImageId: img-pyqx34y1
+            sshUsername: ubuntu
+      - baseImage:
+          id: debian-90
+          shortDescription: v9.0
+          detailedDescription: Debian 9.0 64bits
+          packageType: deb
+          osType: linux
+        virtualizationSettings:
+          - region: ap-guangzhou
+            zone: ap-guangzhou-3
+            instanceType: S3.SMALL1
+            sourceImageId: img-6rrx0ymd
+            sshUsername: root
+      - baseImage:
+          id: centos-76
+          shortDescription: v7.6
+          detailedDescription: CentOS 7.6 64bits
+          packageType: rpm
+          osType: linux
+        virtualizationSettings:
+          - region: ap-guangzhou
+            zone: ap-guangzhou-3
+            instanceType: S3.SMALL1
+            sourceImageId: img-9qabwvbn
+            sshUsername: root
 swagger:
   enabled: true
   title: Spinnaker Rosco API
