@@ -4,7 +4,7 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV KUSTOMIZE_VERSION=5.0.3
+ENV KUSTOMIZE_VERSION=5.4.3
 
 ENV PACKER_VERSION=1.10.1
 
