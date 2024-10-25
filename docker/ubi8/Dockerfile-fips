@@ -47,6 +47,10 @@ RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-t
 
 ENV PATH "/packer:$PATH"
 
+#cve fix 
+RUN yum install  krb5-libs-1.18.2-29.el8_10  expat-2.2.5-15.el8_10 -y
+RUN yum install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10 -y
+
 # Install Helm 3
 RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
   chmod +x get-helm-3 && \
