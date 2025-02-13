@@ -96,7 +96,7 @@ RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${
 RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
 RUN chown -R spinnaker:spinnaker /opt/
 
-RUN yum -y remove  vim vi unzip curl tar  openssl net-tools nettle 
+RUN yum -y remove  unzip curl tar git  openssl net-tools nettle
 RUN yum -y remove clean all && rm -rf /var/cache
 USER spinnaker
 
