@@ -33,7 +33,7 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV KUSTOMIZE_VERSION=5.4.3
+ENV KUSTOMIZE_VERSION=5.6.0
 ENV PACKER_VERSION=1.11.2
 WORKDIR /packer
 
@@ -93,13 +93,6 @@ ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
 RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}.zip -P ${SERVICE_PLUGIN_PATH}
 RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
 
-RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
-RUN chown -R spinnaker:spinnaker /opt/
-
-#RUN yum -y remove  curl tar 
-RUN yum -y remove clean all && rm -rf /var/cache
-USER spinnaker
-
 # Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
 ARG PACKER_PLUGINS="amazon azure googlecompute"
 RUN for plugin in $PACKER_PLUGINS ; do \
@@ -110,4 +103,9 @@ RUN for plugin in $PACKER_PLUGINS ; do \
   fi; \
 done
 
+RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
+RUN chown -R spinnaker:spinnaker /opt/
+#RUN yum -y remove  curl tar 
+RUN yum -y remove clean all && rm -rf /var/cache
+USER spinnaker
 CMD ["/opt/rosco/bin/rosco"]
