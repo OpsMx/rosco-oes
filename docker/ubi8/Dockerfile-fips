@@ -33,7 +33,8 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV KUSTOMIZE_VERSION=4.5.7
+ENV KUSTOMIZE_VERSION4=4.5.7
+ENV KUSTOMIZE_VERSION=5.6.0
 ENV PACKER_VERSION=1.11.2
 WORKDIR /packer
 
@@ -76,9 +77,14 @@ RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-he
 RUN mkdir kustomize && \
   curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
   tar xvz -C kustomize/
-# for kustomize4 
-RUN mv kustomize /usr/local/bin/kustomize4
 
+RUN mkdir kustomize4 && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz|\
+  tar xvz -C kustomize4/
+# for kustomize4 
+RUN mv kustomize4 /usr/local/bin/kustomize4
+
+ENV PATH "kustomize:$PATH"
 ENV PATH "kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
