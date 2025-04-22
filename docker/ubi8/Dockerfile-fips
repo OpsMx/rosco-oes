@@ -43,7 +43,7 @@ RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-t
   unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
   rm packer_${PACKER_VERSION}_linux_amd64.zip
 
-ENV PATH "/packer:$PATH"
+ENV PATH="/packer:$PATH"
 
 ##CVE-2019-12900,CVE-2021-43618
 
@@ -74,19 +74,19 @@ RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-he
   rm get-helm-3 && \
   mv /usr/local/bin/helm /usr/local/bin/helm3
 
-RUN mkdir kustomize && \
-  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
-  tar xvz -C kustomize/
-RUN mv kustomize /usr/local/bin/kustomize
-
 RUN mkdir kustomize4 && \
   curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz|\
   tar xvz -C kustomize4/
 # for kustomize4 
 RUN mv kustomize4 /usr/local/bin/kustomize4
 
-ENV PATH "kustomize:$PATH"
-ENV PATH "kustomize4:$PATH"
+RUN mkdir kustomize && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
+  tar xvz -C kustomize/
+RUN mv kustomize /usr/local/bin/kustomize
+
+ENV PATH="kustomize:$PATH"
+ENV PATH="kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
