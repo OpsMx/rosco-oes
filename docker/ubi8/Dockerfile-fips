@@ -79,7 +79,7 @@ RUN mkdir kustomize && \
 # for kustomize4 
 RUN mv kustomize /usr/local/bin/kustomize4
 
-ENV PATH "kustomize:$PATH"
+ENV PATH "kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
