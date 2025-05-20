@@ -71,7 +71,7 @@ class BakeryController {
   }
 
   @RequestMapping(value = '/bakeOptions/{cloudProvider}', method = RequestMethod.GET)
-  BakeOptions bakeOptionsByCloudProvider(@PathVariable("cloudProvider") BakeRequest.CloudProviderType cloudProvider) {
+  BakeOptions bakeOptionsByCloudProvider(@PathVariable(value = "cloudProvider") BakeRequest.CloudProviderType cloudProvider) {
     def bakeHandler = cloudProviderBakeHandlerRegistry.lookup(cloudProvider)
     if (!bakeHandler) {
       throw new BakeOptions.Exception("Cloud provider $cloudProvider not found")
@@ -80,7 +80,7 @@ class BakeryController {
   }
 
   @RequestMapping(value = '/bakeOptions/{cloudProvider}/baseImages/{imageId}', method = RequestMethod.GET)
-  BakeOptions.BaseImage baseImage(@PathVariable("cloudProvider") BakeRequest.CloudProviderType cloudProvider, @PathVariable("imageId") String imageId) {
+  BakeOptions.BaseImage baseImage(@PathVariable(value = "cloudProvider") BakeRequest.CloudProviderType cloudProvider, @PathVariable(value = "imageId") String imageId) {
     BakeOptions bakeOptions = bakeOptionsByCloudProvider(cloudProvider)
     def baseImage = bakeOptions.baseImages.find { it.id == imageId }
     if (!baseImage) {
@@ -147,7 +147,7 @@ class BakeryController {
   }
 
   @RequestMapping(value = '/api/v1/{region}/bake', method = RequestMethod.POST)
-  BakeStatus createBake(@PathVariable("region") String region,
+  BakeStatus createBake(@PathVariable(value = "region") String region,
                         @RequestBody BakeRequest bakeRequest,
                         @RequestParam(value = "rebake", defaultValue = "0") String rebake) {
     String executionId = AuthenticatedRequest.getSpinnakerExecutionId().orElse(null)
@@ -223,8 +223,8 @@ class BakeryController {
 
   @Operation(summary = "Look up bake request status")
   @RequestMapping(value = "/api/v1/{region}/status/{statusId}", method = RequestMethod.GET)
-  BakeStatus lookupStatus(@Parameter(description = "The region of the bake request to lookup", required = true) @PathVariable("region") String region,
-                          @Parameter(description = "The id of the bake request to lookup", required = true) @PathVariable("statusId") String statusId) {
+  BakeStatus lookupStatus(@Parameter(description = "The region of the bake request to lookup", required = true) @PathVariable(value = "region") String region,
+                          @Parameter(description = "The id of the bake request to lookup", required = true) @PathVariable(value = "statusId") String statusId) {
     def bakeStatus = bakeStore.retrieveBakeStatusById(statusId)
 
     if (bakeStatus) {
@@ -236,8 +236,8 @@ class BakeryController {
 
   @Operation(summary = "Look up bake details")
   @RequestMapping(value = "/api/v1/{region}/bake/{bakeId}", method = RequestMethod.GET)
-  Bake lookupBake(@Parameter(description = "The region of the bake to lookup", required = true) @PathVariable("region") String region,
-                  @Parameter(description = "The id of the bake to lookup", required = true) @PathVariable("bakeId") String bakeId) {
+  Bake lookupBake(@Parameter(description = "The region of the bake to lookup", required = true) @PathVariable(value = "region") String region,
+                  @Parameter(description = "The id of the bake to lookup", required = true) @PathVariable(value = "bakeId") String bakeId) {
     def bake = bakeStore.retrieveBakeDetailsById(bakeId)
 
     if (bake) {
@@ -255,7 +255,7 @@ class BakeryController {
   }
 
   @RequestMapping(value = "/api/v1/{region}/logs/{statusId}", produces = ["application/json"], method = RequestMethod.GET)
-  Map lookupLogs(@PathVariable("region") String region, @PathVariable("statusId") String statusId) {
+  Map lookupLogs(@PathVariable(value = "region") String region, @PathVariable(value = "statusId") String statusId) {
     Map logsContentMap = bakeStore.retrieveBakeLogsById(statusId)
 
     if (logsContentMap?.logsContent) {
@@ -266,7 +266,7 @@ class BakeryController {
   }
 
   @RequestMapping(value = "/api/v1/{region}/logs/image/{imageId}", produces = ["application/json"], method = RequestMethod.GET)
-  Map lookupLogsByImageId(@PathVariable("region") String region, @PathVariable("imageId") String imageId) {
+  Map lookupLogsByImageId(@PathVariable(value = "region") String region, @PathVariable(value = "imageId") String imageId) {
     def bakeId = bakeStore.getBakeIdFromImage(region, imageId)
     if (!bakeId) {
       throw new LogsNotFoundException("Unable to retrieve logs for image id '$imageId'.")
@@ -286,7 +286,7 @@ class BakeryController {
 
   // TODO(duftler): Synchronize this with existing bakery api.
   @RequestMapping(value = '/api/v1/{region}/bake', method = RequestMethod.DELETE)
-  String deleteBake(@PathVariable("region") String region,
+  String deleteBake(@PathVariable(value = "region") String region,
                     @RequestBody BakeRequest bakeRequest) {
     if (!bakeRequest.cloud_provider_type) {
       bakeRequest = bakeRequest.copyWith(cloud_provider_type: defaultCloudProviderType)
@@ -318,8 +318,8 @@ class BakeryController {
   // TODO(duftler): Synchronize this with existing bakery api.
   @Operation(summary = "Cancel bake request")
   @RequestMapping(value = "/api/v1/{region}/cancel/{statusId}", method = RequestMethod.GET)
-  String cancelBake(@Parameter(description = "The region of the bake request to cancel", required = true) @PathVariable("region") String region,
-                    @Parameter(description = "The id of the bake request to cancel", required = true) @PathVariable("statusId") String statusId) {
+  String cancelBake(@Parameter(description = "The region of the bake request to cancel", required = true) @PathVariable(value = "region") String region,
+                    @Parameter(description = "The id of the bake request to cancel", required = true) @PathVariable(value = "statusId") String statusId) {
     if (bakeStore.cancelBakeById(statusId)) {
       jobExecutor.cancelJob(statusId)
 

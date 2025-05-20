@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +22,15 @@ public class V2BakeryController {
   private final ObjectMapper objectMapper;
 
   public V2BakeryController(
-      List<BakeManifestService> bakeManifestServices, ObjectMapper objectMapper) {
+      List<BakeManifestService> bakeManifestServices,
+      @Qualifier("artifactObjectMapper") ObjectMapper objectMapper) {
     this.bakeManifestServices = bakeManifestServices;
     this.objectMapper = objectMapper;
   }
 
   @RequestMapping(value = "/api/v2/manifest/bake/{type}", method = RequestMethod.POST)
-  Artifact doBake(@PathVariable("type") String type, @RequestBody Map<String, Object> request)
+  Artifact doBake(
+      @PathVariable(value = "type") String type, @RequestBody Map<String, Object> request)
       throws IOException {
     BakeManifestService service =
         bakeManifestServices.stream()

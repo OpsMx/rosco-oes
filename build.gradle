@@ -19,7 +19,8 @@ subprojects {
 
     dependencies {
       implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
-
+      implementation "org.springframework.boot:spring-boot-starter-actuator"
+      implementation "io.micrometer:micrometer-registry-prometheus"
       annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
       annotationProcessor "org.projectlombok:lombok"
       annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -39,7 +40,6 @@ subprojects {
     if (korkVersion.endsWith("-SNAPSHOT")) {
         logger.info("Enabling mavenLocal")
         repositories {
-            mavenLocal()
              maven{
                 url = "NEXUS_URL"
                  credentials {
@@ -57,6 +57,7 @@ subprojects {
   }
 
   tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-parameters"
     javaCompiler = javaToolchains.compilerFor {
       languageVersion = JavaLanguageVersion.of(17)
     }
