@@ -19,7 +19,8 @@ subprojects {
 
     dependencies {
       implementation enforcedPlatform("io.spinnaker.kork:kork-bom:$korkVersion")
-
+      implementation "org.springframework.boot:spring-boot-starter-actuator"
+      implementation "io.micrometer:micrometer-registry-prometheus"
       annotationProcessor platform("io.spinnaker.kork:kork-bom:$korkVersion")
       annotationProcessor "org.projectlombok:lombok"
       annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
