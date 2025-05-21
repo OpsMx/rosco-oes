@@ -91,6 +91,7 @@ USER spinnaker
 
 # Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
 ARG PACKER_PLUGINS="amazon azure googlecompute"
+export PACKER_PLUGIN_PATH=/home/spinnaker/.config/packer/plugins/
 RUN for plugin in $PACKER_PLUGINS ; do \
   if [ -f /run/secrets/github_token ]; then \
     PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
