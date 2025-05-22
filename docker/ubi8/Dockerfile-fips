@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi:8.8 as java-builder
 LABEL maintainer="OpsMx"
 
 ARG JAVA_PACKAGE=java-17-openjdk-jmods
-ARG HELM_VERSION="v3.14.4"
+
 
 RUN yum -y update && \
     yum -y install --nodocs ${JAVA_PACKAGE} && \
@@ -36,6 +36,7 @@ COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
 ENV ARCH=amd64
+ENV HELM_VERSION="v3.14.4"
 ENV KUSTOMIZE_VERSION4=4.5.7
 ENV KUSTOMIZE_VERSION=5.6.0
 ENV PACKER_VERSION__OLD=1.11.2
