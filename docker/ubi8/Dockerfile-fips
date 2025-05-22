@@ -35,7 +35,8 @@ COPY halconfig/packer              /opt/rosco/config/packer
 
 ENV KUSTOMIZE_VERSION4=4.5.7
 ENV KUSTOMIZE_VERSION=5.6.0
-ENV PACKER_VERSION=1.11.2
+ENV PACKER_VERSION__OLD=1.11.2
+ENV PACKER_VERSION=1.12.0
 WORKDIR /packer
 
 RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
@@ -69,12 +70,14 @@ RUN wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/
 RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
 rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 # Install Helm 3
-RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
-  chmod +x get-helm-3 && \
-  ./get-helm-3 && \
-  rm get-helm-3 && \
-  mv /usr/local/bin/helm /usr/local/bin/helm3
+#RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+   chmod +x get-helm-3 && \
+   ./get-helm-3 && \
+   rm get-helm-3 && \
+   mv /usr/local/bin/helm /usr/local/bin/helm3
 
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
