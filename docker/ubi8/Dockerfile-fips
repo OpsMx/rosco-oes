@@ -70,7 +70,6 @@ RUN wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/
 RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
 rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 # Install Helm 3
 #RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3  && \
