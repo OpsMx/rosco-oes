@@ -35,7 +35,7 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV ARCH="$(uname -m)"
+ENV ARCH=amd64
 ENV KUSTOMIZE_VERSION4=4.5.7
 ENV KUSTOMIZE_VERSION=5.6.0
 ENV PACKER_VERSION__OLD=1.11.2
