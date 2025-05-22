@@ -3,7 +3,6 @@ LABEL maintainer="OpsMx"
 
 ARG JAVA_PACKAGE=java-17-openjdk-jmods
 
-
 RUN yum -y update && \
     yum -y install --nodocs ${JAVA_PACKAGE} && \
     yum clean all && \
@@ -44,9 +43,9 @@ ENV PACKER_VERSION=1.12.0
 WORKDIR /packer
 
 RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
-  wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-  unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
-  rm packer_${PACKER_VERSION}_linux_amd64.zip
+    wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
+    rm packer_${PACKER_VERSION}_linux_amd64.zip
 
 ENV PATH="/packer:$PATH"
 
