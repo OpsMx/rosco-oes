@@ -2,6 +2,8 @@ FROM registry.access.redhat.com/ubi8/ubi:8.8 as java-builder
 LABEL maintainer="OpsMx"
 
 ARG JAVA_PACKAGE=java-17-openjdk-jmods
+ARG HELM_VERSION="v3.14.4"
+
 RUN yum -y update && \
     yum -y install --nodocs ${JAVA_PACKAGE} && \
     yum clean all && \
@@ -33,6 +35,7 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
+ENV ARCH="$(uname -m)"
 ENV KUSTOMIZE_VERSION4=4.5.7
 ENV KUSTOMIZE_VERSION=5.6.0
 ENV PACKER_VERSION__OLD=1.11.2
@@ -71,12 +74,14 @@ RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
 rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 
 # Install Helm 3
-#RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
-RUN curl -fsSL -o get_helm-3.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3  && \
-    chmod 700 get_helm-3.sh && \
-    ./get_helm-3.sh && \
-    rm get_helm-3.sh && \
-    mv /usr/local/bin/helm /usr/local/bin/helm3
+RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    tar -zxvf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    mv linux-${ARCH}/helm /usr/local/bin/helm && \
+    chmod +x /usr/local/bin/helm && \
+    rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
+
+# Verify Helm installation
+RUN helm version
 
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
