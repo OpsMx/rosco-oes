@@ -73,10 +73,10 @@ rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 # Install Helm 3
 #RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
 RUN curl -fsSL -o get_helm-3.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3  && \
-   chmod +x get-helm-3 && \
-   ./get-helm-3 && \
-   rm get-helm-3 && \
-   mv /usr/local/bin/helm /usr/local/bin/helm3
+    chmod 700 get_helm-3.sh && \
+    ./get_helm-3.sh && \
+    rm get_helm-3.sh && \
+    mv /usr/local/bin/helm /usr/local/bin/helm3
 
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
