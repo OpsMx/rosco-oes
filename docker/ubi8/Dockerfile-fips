@@ -34,7 +34,7 @@ COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV ARCH=amd64
+ENV ARCH=x86_64
 ENV HELM_VERSION="v3.18.0"
 ENV KUSTOMIZE_VERSION4=4.5.7
 ENV KUSTOMIZE_VERSION=5.6.0
