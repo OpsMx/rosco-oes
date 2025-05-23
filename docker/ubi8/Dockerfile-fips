@@ -80,7 +80,7 @@ RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
     rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
 
 # Verify Helm installation
-RUN helm version
+RUN helm3 version
 
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
