@@ -135,6 +135,6 @@ done
 RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
 RUN chown -R spinnaker:spinnaker /opt/
 
-RUN yum -y remove clean all && rm -rf /var/cache
+#RUN yum -y remove clean all && rm -rf /var/cache
 USER spinnaker
 #CMD ["/opt/rosco/bin/rosco"]
