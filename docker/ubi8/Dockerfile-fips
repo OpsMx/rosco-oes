@@ -50,19 +50,19 @@ ENV PATH="/packer:$PATH"
 
 ##CVE-2019-12900,CVE-2021-43618
 
-#RUN dnf -y update  gnutls python3-idna python3-urllib3 libxml2 openldap sqlite-libs && dnf clean all
+RUN dnf -y update  gnutls python3-idna python3-urllib3 libxml2 openldap sqlite-libs && dnf clean all
 
 # Verify the updated versions
-#RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs 
+RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs 
 
 # Install or upgrade Python (optional version 3.6 or 3.8)
-#RUN yum -y install python3 && yum clean all
+RUN yum -y install python3 && yum clean all
 
 # Verify Python version
 #RUN python3 --version
 
 RUN yum -y install git bash curl wget binutils bzip2-libs-1.0.6-28.el8_10
-#RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
+RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
 
 RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-16.el8_10.x86_64.rpm
 RUN rpm -Uvh --force expat-2.2.5-16.el8_10.x86_64.rpm  && \
@@ -83,23 +83,23 @@ RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
 RUN helm3 version
 
 # Install kustomize4
-RUN mkdir -p /tmp/kustomize4 && \
-  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
-  tar xz -C /tmp/kustomize4 && \
-  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
-  chmod +x /usr/local/bin/kustomize4 && \
-  rm -rf /tmp/kustomize4
+#RUN mkdir -p /tmp/kustomize4 && \
+#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
+#  tar xz -C /tmp/kustomize4 && \
+#  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
+#  chmod +x /usr/local/bin/kustomize4 && \
+#  rm -rf /tmp/kustomize4
 
 # Install latest kustomize
-RUN mkdir -p /tmp/kustomize && \
-  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
-  tar xz -C /tmp/kustomize && \
-  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
-  chmod +x /usr/local/bin/kustomize && \
-  rm -rf /tmp/kustomize
+#RUN mkdir -p /tmp/kustomize && \
+#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
+#  tar xz -C /tmp/kustomize && \
+#  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
+#  chmod +x /usr/local/bin/kustomize && \
+#  rm -rf /tmp/kustomize
 
-ENV PATH="kustomize:$PATH"
-ENV PATH="kustomize4:$PATH"
+#ENV PATH="kustomize:$PATH"
+#ENV PATH="kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
@@ -114,8 +114,8 @@ ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
 ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
 ENV CUSTOMPLUGIN_RELEASE_SRC_VERSION=$CUSTOMPLUGIN_RELEASE_SRC_VERSION
 
-#RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
-#RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
+RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
+RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
 
 # Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
 ARG PACKER_PLUGINS="amazon azure googlecompute"
