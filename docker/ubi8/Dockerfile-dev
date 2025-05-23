@@ -92,11 +92,11 @@ USER spinnaker
 ARG PACKER_PLUGINS="amazon azure googlecompute"
 ENV PACKER_PLUGIN_PATH=/home/spinnaker/.config/packer/plugins/
 #RUN for plugin in $PACKER_PLUGINS ; do \
-  if [ -f /run/secrets/github_token ]; then \
-    PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
-  else \
-    packer plugins install "github.com/hashicorp/$plugin"; \
-  fi; \
-done
+ # if [ -f /run/secrets/github_token ]; then \
+ #   PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
+ # else \
+#    packer plugins install "github.com/hashicorp/$plugin"; \
+#  fi; \
+#done
 
 CMD ["/opt/rosco/bin/rosco"]
