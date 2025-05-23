@@ -73,33 +73,33 @@ RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
 rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 
 # Install Helm 3
-#RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
-#    tar -zxvf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
-#    mv linux-${ARCH}/helm /usr/local/bin/helm3 && \
-#    chmod +x /usr/local/bin/helm3 && \
-#    rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
+RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    tar -zxvf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    mv linux-${ARCH}/helm /usr/local/bin/helm3 && \
+    chmod +x /usr/local/bin/helm3 && \
+    rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
 
 # Verify Helm installation
-#RUN helm3 version
+RUN helm3 version
 
 # Install kustomize4
-#RUN mkdir -p /tmp/kustomize4 && \
-#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
-#  tar xz -C /tmp/kustomize4 && \
-#  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
-#  chmod +x /usr/local/bin/kustomize4 && \
-#  rm -rf /tmp/kustomize4
+RUN mkdir -p /tmp/kustomize4 && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
+  tar xz -C /tmp/kustomize4 && \
+  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
+  chmod +x /usr/local/bin/kustomize4 && \
+  rm -rf /tmp/kustomize4
 
 # Install latest kustomize
-#RUN mkdir -p /tmp/kustomize && \
-#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
-#  tar xz -C /tmp/kustomize && \
-#  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
-#  chmod +x /usr/local/bin/kustomize && \
-#  rm -rf /tmp/kustomize
+RUN mkdir -p /tmp/kustomize && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
+  tar xz -C /tmp/kustomize && \
+  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
+  chmod +x /usr/local/bin/kustomize && \
+  rm -rf /tmp/kustomize
 
-#ENV PATH="kustomize:$PATH"
-#ENV PATH="kustomize4:$PATH"
+ENV PATH="kustomize:$PATH"
+ENV PATH="kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
@@ -114,8 +114,8 @@ ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
 ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
 ENV CUSTOMPLUGIN_RELEASE_SRC_VERSION=$CUSTOMPLUGIN_RELEASE_SRC_VERSION
 
-#RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
-#RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
+RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
+RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
 
 # Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
 ARG PACKER_PLUGINS="amazon azure googlecompute"
