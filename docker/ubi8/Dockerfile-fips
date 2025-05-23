@@ -58,9 +58,6 @@ RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs
 # Install or upgrade Python (optional version 3.6 or 3.8)
 RUN yum -y install python3 && yum clean all
 
-# Verify Python version
-RUN python3 --version
-
 RUN yum -y install git bash curl wget binutils bzip2-libs-1.0.6-28.el8_10
 RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
 
@@ -79,8 +76,6 @@ RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
     chmod +x /usr/local/bin/helm3 && \
     rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
 
-# Verify Helm installation
-RUN helm3 version
 
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
