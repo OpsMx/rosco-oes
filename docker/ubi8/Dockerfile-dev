@@ -31,9 +31,9 @@ RUN fips-mode-setup --enable
 # Setting crypto policies to FIPS
 RUN update-crypto-policies --set FIPS
 
-COPY rosco-web/build/install/rosco /opt/rosco
-COPY rosco-web/config              /opt/rosco
-COPY halconfig/packer              /opt/rosco/config/packer
+#COPY rosco-web/build/install/rosco /opt/rosco
+#COPY rosco-web/config              /opt/rosco
+#COPY halconfig/packer              /opt/rosco/config/packer
 RUN mkdir -p /opt/jaeger
 COPY jaeger/opentelemetry-javaagent.jar /opt/jaeger/opentelemetry-javaagent.jar
 
@@ -43,12 +43,12 @@ ENV PACKER_VERSION=1.11.2
 
 WORKDIR /packer
 
-RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
-  wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle
+#RUN  wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
   rm packer_${PACKER_VERSION}_linux_amd64.zip
 
-ENV PATH "/packer:$PATH"
+#ENV PATH "/packer:$PATH"
 
 # Install Helm 3
 RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-helm-3 && \
@@ -57,10 +57,7 @@ RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-he
   rm get-helm-3 && \
   mv /usr/local/bin/helm /usr/local/bin/helm3
 
-# Install Helm 2
-#RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get && chmod +x get && ./get &&  rm get
-
-RUN mkdir kustomize && \
+#RUN mkdir kustomize && \
   curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
   tar xvz -C kustomize/
 
@@ -84,8 +81,8 @@ ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
 ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
 ENV CUSTOMPLUGIN_RELEASE_SRC_VERSION=$CUSTOMPLUGIN_RELEASE_SRC_VERSION
 
-RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
-RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
+#RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
+#RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
 
 RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
 RUN chown -R spinnaker:spinnaker /opt/
@@ -94,7 +91,7 @@ USER spinnaker
 # Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
 ARG PACKER_PLUGINS="amazon azure googlecompute"
 ENV PACKER_PLUGIN_PATH=/home/spinnaker/.config/packer/plugins/
-RUN for plugin in $PACKER_PLUGINS ; do \
+#RUN for plugin in $PACKER_PLUGINS ; do \
   if [ -f /run/secrets/github_token ]; then \
     PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
   else \
