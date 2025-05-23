@@ -58,10 +58,10 @@ RUN wget https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get-he
   mv /usr/local/bin/helm /usr/local/bin/helm3
 
 #RUN mkdir kustomize && \
-  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
-  tar xvz -C kustomize/
+  #curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz|\
+  #tar xvz -C kustomize/
 
-ENV PATH "kustomize:$PATH"
+#ENV PATH "kustomize:$PATH"
 
 #RUN yum -y remove unzip curl tar  openssl net-tools nettle 
 RUN yum -y remove clean all && rm -rf /var/cache
