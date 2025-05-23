@@ -50,27 +50,27 @@ ENV PATH="/packer:$PATH"
 
 ##CVE-2019-12900,CVE-2021-43618
 
-#RUN dnf -y update  gnutls python3-idna python3-urllib3 libxml2 openldap sqlite-libs && dnf clean all
+RUN dnf -y update  gnutls python3-idna python3-urllib3 libxml2 openldap sqlite-libs && dnf clean all
 
 # Verify the updated versions
-#RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs 
+RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs 
 
 # Install or upgrade Python (optional version 3.6 or 3.8)
-#RUN yum -y install python3 && yum clean all
+RUN yum -y install python3 && yum clean all
 
 # Verify Python version
-#RUN python3 --version
+RUN python3 --version
 
-RUN yum -y install git bash curl wget binutils bzip2-libs-1.0.6-28.el8_10
-RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
+#RUN yum -y install git bash curl wget binutils bzip2-libs-1.0.6-28.el8_10
+#RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
 
-RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-16.el8_10.x86_64.rpm
-RUN rpm -Uvh --force expat-2.2.5-16.el8_10.x86_64.rpm  && \
-rm expat-2.2.5-16.el8_10.x86_64.rpm
+#RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-16.el8_10.x86_64.rpm
+#RUN rpm -Uvh --force expat-2.2.5-16.el8_10.x86_64.rpm  && \
+#rm expat-2.2.5-16.el8_10.x86_64.rpm
 
-RUN wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-30.el8_10.x86_64.rpm
-RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
-rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
+#RUN wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-30.el8_10.x86_64.rpm
+#RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
+#rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
 
 # Install Helm 3
 RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
