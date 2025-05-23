@@ -83,23 +83,23 @@ RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
 RUN helm3 version
 
 # Install kustomize4
-#RUN mkdir -p /tmp/kustomize4 && \
-#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
-#  tar xz -C /tmp/kustomize4 && \
-#  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
-#  chmod +x /usr/local/bin/kustomize4 && \
-#  rm -rf /tmp/kustomize4
+RUN mkdir -p /tmp/kustomize4 && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
+  tar xz -C /tmp/kustomize4 && \
+  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
+  chmod +x /usr/local/bin/kustomize4 && \
+  rm -rf /tmp/kustomize4
 
 # Install latest kustomize
-#RUN mkdir -p /tmp/kustomize && \
-#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
-#  tar xz -C /tmp/kustomize && \
-#  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
-#  chmod +x /usr/local/bin/kustomize && \
-#  rm -rf /tmp/kustomize
+RUN mkdir -p /tmp/kustomize && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
+  tar xz -C /tmp/kustomize && \
+  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
+  chmod +x /usr/local/bin/kustomize && \
+  rm -rf /tmp/kustomize
 
-#ENV PATH="kustomize:$PATH"
-#ENV PATH="kustomize4:$PATH"
+ENV PATH="kustomize:$PATH"
+ENV PATH="kustomize4:$PATH"
 RUN useradd spinnaker
 RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
 
