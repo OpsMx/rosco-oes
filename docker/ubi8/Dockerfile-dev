@@ -137,4 +137,4 @@ RUN chown -R spinnaker:spinnaker /opt/
 
 RUN yum -y remove clean all && rm -rf /var/cache
 USER spinnaker
-CMD ["/opt/rosco/bin/rosco"]
+#CMD ["/opt/rosco/bin/rosco"]
