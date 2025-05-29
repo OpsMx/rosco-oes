@@ -1,82 +1,51 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.8 as java-builder
+# -------------------------------
+# Stage 1: Build Rosco 
+# -------------------------------
+FROM registry.access.redhat.com/ubi8/ubi:8.8 AS java-builder
 LABEL maintainer="OpsMx"
 
 ARG JAVA_PACKAGE=java-17-openjdk-jmods
 
 RUN yum -y update && \
     yum -y install --nodocs ${JAVA_PACKAGE} && \
-    yum clean all && \
-    rm -rf /var/cache/yum
+    yum clean all
 
-# Build a custom JRE.
 WORKDIR /jrebuild
-RUN java --list-modules | cut -d'@' -f1 > modules
-RUN jlink --output runtime --add-modules `paste -sd, - < modules` --compress 2 --vm server
 
-# Build a minimal base image with our custom Java installed.
+RUN java --list-modules | cut -d'@' -f1 > modules && \
+    jlink --output runtime --add-modules $(paste -sd, - < modules) --compress 2 --vm server
 
+# -------------------------------
+# Stage 2: Build Final Runtime Image
+# -------------------------------
 FROM registry.access.redhat.com/ubi8/ubi:8.8 AS java-base
-COPY --from=java-builder /jrebuild/runtime /opsmx-java-runtime
-ARG OPSMXUSER=1001
+
+# Environment setup
 ENV JAVA_HOME=/opsmx-java-runtime \
-    PATH=${PATH}:/opsmx-java-runtime/bin \
+    PATH=$JAVA_HOME/bin:$PATH \
     WORK_DIR=/opsmx/workdir \
     CONF_DIR=/opsmx/conf \
-    SERVICE_PLUGIN_PATH=/opt/rosco/plugins
+    SERVICE_PLUGIN_PATH=/opt/rosco/plugins \
+    ARCH=amd64 \
+    HELM_VERSION="v3.18.0" \
+    KUSTOMIZE_VERSION=5.6.0 \
+    PACKER_VERSION=1.12.0 \
+    PACKER_PLUGIN_PATH=/home/spinnaker/.config/packer/plugins/
 
-# Enabling fips mode
-RUN fips-mode-setup --enable
+# Create user and necessary directories
+RUN useradd -m spinnaker && mkdir -p $SERVICE_PLUGIN_PATH
 
-# Setting crypto policies to FIPS
-RUN update-crypto-policies --set FIPS
+# Copy custom Java runtime from builder stage
+COPY --from=java-builder /jrebuild/runtime /opsmx-java-runtime
 
+# Copy application files
 COPY rosco-web/build/install/rosco /opt/rosco
 COPY rosco-web/config              /opt/rosco
 COPY halconfig/packer              /opt/rosco/config/packer
 
-ENV ARCH=amd64
-ENV HELM_VERSION="v3.18.0"
-ENV KUSTOMIZE_VERSION4=4.5.7
-ENV KUSTOMIZE_VERSION=5.6.0
-ENV PACKER_VERSION=1.12.0
 WORKDIR /packer
 
-RUN yum install -y java-17-openjdk-devel wget unzip curl tar git  openssl  net-tools nettle  && \
-    wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-    unzip packer_${PACKER_VERSION}_linux_amd64.zip && \
-    rm packer_${PACKER_VERSION}_linux_amd64.zip
-
-ENV PATH="/packer:$PATH"
-
-##CVE-2019-12900,CVE-2021-43618
-
-RUN dnf -y update  gnutls python3-idna python3-urllib3 libxml2 openldap sqlite-libs && dnf clean all
-
-# Verify the updated versions
-RUN rpm -q python3-urllib3 libxml2 openldap sqlite-libs 
-
-# Install or upgrade Python (optional version 3.6 or 3.8)
-RUN yum -y install python3 && yum clean all
-
-RUN yum -y install git bash curl wget binutils bzip2-libs-1.0.6-28.el8_10
-RUN yum -y install ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8
-
-RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-16.el8_10.x86_64.rpm
-RUN rpm -Uvh --force expat-2.2.5-16.el8_10.x86_64.rpm  && \
-rm expat-2.2.5-16.el8_10.x86_64.rpm
-
-RUN wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-30.el8_10.x86_64.rpm
-RUN rpm -Uvh --force  krb5-libs-1.18.2-30.el8_10.x86_64.rpm  && \
-rm krb5-libs-1.18.2-30.el8_10.x86_64.rpm
-
-# Install Helm 3
-RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
-    tar -zxvf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
-    mv linux-${ARCH}/helm /usr/local/bin/helm3 && \
-    chmod +x /usr/local/bin/helm3 && \
-    rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
-
-
+# ENV KUSTOMIZE_VERSION4=4.5.7
 # Install kustomize4
 #RUN mkdir -p /tmp/kustomize4 && \
 #  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
@@ -85,36 +54,53 @@ RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
 #  chmod +x /usr/local/bin/kustomize4 && \
 #  rm -rf /tmp/kustomize4
 
-# Install latest kustomize
+# Install system packages and tools
+RUN yum install -y \
+      java-17-openjdk-devel wget unzip curl tar git openssl net-tools nettle \
+      ca-certificates gmp \
+    && yum install -y python3.12 \
+    && yum clean all
+
+# Install Packer
+RUN curl -Lo packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip packer.zip && \
+    mv packer /usr/local/bin/ && \
+    rm packer.zip
+
+# Install Helm
+RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    tar -zxvf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz && \
+    mv linux-${ARCH}/helm /usr/local/bin/helm3 && \
+    chmod +x /usr/local/bin/helm3 && \
+    rm -rf helm-${HELM_VERSION}-linux-${ARCH}.tar.gz linux-${ARCH}
+
+# Install Kustomize
 RUN mkdir -p /tmp/kustomize && \
-  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
-  tar xz -C /tmp/kustomize && \
-  mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
-  chmod +x /usr/local/bin/kustomize && \
-  rm -rf /tmp/kustomize
+    curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | \
+    tar xz -C /tmp/kustomize && \
+    mv /tmp/kustomize/kustomize /usr/local/bin/kustomize && \
+    chmod +x /usr/local/bin/kustomize && \
+    rm -rf /tmp/kustomize
 
-ENV PATH="kustomize:$PATH"
-#ENV PATH="kustomize4:$PATH"
-RUN useradd spinnaker
-RUN mkdir -p ${SERVICE_PLUGIN_PATH} 
+# Install CVE fixed packages manually
+RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-17.el8_10.x86_64.rpm && \
+    rpm -Uvh --force expat-2.2.5-17.el8_10.x86_64.rpm && \
+    rm expat-2.2.5-17.el8_10.x86_64.rpm && \
+    wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-31.el8_10.x86_64.rpm && \
+    rpm -Uvh --force krb5-libs-1.18.2-31.el8_10.x86_64.rpm && \
+    rm krb5-libs-1.18.2-31.el8_10.x86_64.rpm
 
-#custom plugin zip files adding
-
-ARG CUSTOMPLUGIN_RELEASE_VERSION
-ENV CUSTOMPLUGIN_RELEASE_VERSION=$CUSTOMPLUGIN_RELEASE_VERSION
+# Add custom plugin
 ARG CUSTOMPLUGIN_RELEASEORG
-ENV CUSTOMPLUGIN_RELEASEORG=$CUSTOMPLUGIN_RELEASEORG
 ARG CUSTOMPLUGIN_RELEASEREPO
-ENV CUSTOMPLUGIN_RELEASEREPO=$CUSTOMPLUGIN_RELEASEREPO
+ARG CUSTOMPLUGIN_RELEASE_VERSION
 ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
-ENV CUSTOMPLUGIN_RELEASE_SRC_VERSION=$CUSTOMPLUGIN_RELEASE_SRC_VERSION
 
-RUN wget -O Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip -c https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip -P ${SERVICE_PLUGIN_PATH}
-RUN mv Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip ${SERVICE_PLUGIN_PATH}
+RUN wget -q -O ${SERVICE_PLUGIN_PATH}/Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip \
+    https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip
 
-# Install packer plugins (must be run as spinnaker user). To provide a github token (optional), run docker build with something like "--secret id=github_token,env=PACKER_GITHUB_API_TOKEN"
+# Install packer plugins
 ARG PACKER_PLUGINS="amazon azure googlecompute"
-ENV PACKER_PLUGIN_PATH=/home/spinnaker/.config/packer/plugins/
 RUN for plugin in $PACKER_PLUGINS ; do \
   if [ -f /run/secrets/github_token ]; then \
     PACKER_GITHUB_API_TOKEN=$(cat /run/secrets/github_token) packer plugins install "github.com/hashicorp/$plugin"; \
@@ -123,9 +109,13 @@ RUN for plugin in $PACKER_PLUGINS ; do \
   fi; \
 done
 
-RUN chmod -R 777 ${SERVICE_PLUGIN_PATH}
-RUN chown -R spinnaker:spinnaker /opt/
-#RUN yum -y remove  curl tar 
-RUN yum -y remove clean all && rm -rf /var/cache
+# Cleanup
+RUN rm -rf /var/cache /tmp/* &&  \
+    yum remove -y vim-minimal && \
+    chown -R spinnaker:spinnaker /opt/ && \
+    chmod -R 755 ${SERVICE_PLUGIN_PATH} /opt/
+
 USER spinnaker
-CMD ["/opt/rosco/bin/rosco"]
+
+# Entry point
+CMD ["/bin/sh", "-c", "sleep 10s && /opt/rosco/bin/rosco"]
