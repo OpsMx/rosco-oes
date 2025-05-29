@@ -56,10 +56,10 @@ WORKDIR /packer
 
 # Install system packages and tools
 RUN yum install -y \
-      java-17-openjdk-devel wget unzip curl tar git openssl net-tools nettle \
-      ca-certificates gmp \
-    && yum install -y python3.12 \
-    && yum clean all
+      java-17-openjdk-devel wget unzip curl tar git openssl net-tools nettle  && \
+      bzip2-libs-1.0.6-28.el8_10  ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8 -y && \
+      yum install -y python3.12 && \
+      yum clean all
 
 # Install Packer
 RUN curl -Lo packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
