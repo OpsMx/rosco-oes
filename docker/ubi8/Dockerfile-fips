@@ -45,14 +45,14 @@ COPY halconfig/packer              /opt/rosco/config/packer
 
 WORKDIR /packer
 
-# ENV KUSTOMIZE_VERSION4=4.5.7
+ ENV KUSTOMIZE_VERSION4=4.5.7
 # Install kustomize4
-#RUN mkdir -p /tmp/kustomize4 && \
-#  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
-#  tar xz -C /tmp/kustomize4 && \
-#  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
-#  chmod +x /usr/local/bin/kustomize4 && \
-#  rm -rf /tmp/kustomize4
+RUN mkdir -p /tmp/kustomize4 && \
+  curl -s -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION4}/kustomize_v${KUSTOMIZE_VERSION4}_linux_amd64.tar.gz | \
+  tar xz -C /tmp/kustomize4 && \
+  mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
+  chmod +x /usr/local/bin/kustomize4 && \
+  rm -rf /tmp/kustomize4
 
 # Install system packages and tools
 RUN yum install -y \
