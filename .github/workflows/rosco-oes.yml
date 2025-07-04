@@ -5,6 +5,7 @@ on:
   push:
     branches:
     - OES-1.33.x
+    - feature-amazonsdk-update-2-SNAPSHOT
  
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Xmx6g -Xms6g
