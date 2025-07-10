@@ -15,9 +15,9 @@ WORKDIR /jrebuild
 RUN java --list-modules | cut -d'@' -f1 > modules && \
     jlink --output runtime --add-modules $(paste -sd, - < modules) --compress 2 --vm server
 
-# -------------------------------
+# -----------------------------------
 # Stage 2: Build Final Runtime Image
-# -------------------------------
+# -----------------------------------
 FROM registry.access.redhat.com/ubi8/ubi:8.8 AS java-base
 
 # Environment setup
@@ -93,15 +93,6 @@ RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat
     rpm -Uvh --force krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
     rm krb5-libs-1.18.2-32.el8_10.x86_64.rpm
 
-# Add custom plugin
-ARG CUSTOMPLUGIN_RELEASEORG
-ARG CUSTOMPLUGIN_RELEASEREPO
-ARG CUSTOMPLUGIN_RELEASE_VERSION
-ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
-
-RUN wget -q -O ${SERVICE_PLUGIN_PATH}/Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip \
-    https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip
-
 # Install packer plugins
 ARG PACKER_PLUGINS="amazon azure googlecompute"
 RUN for plugin in $PACKER_PLUGINS ; do \
@@ -111,6 +102,17 @@ RUN for plugin in $PACKER_PLUGINS ; do \
     packer plugins install "github.com/hashicorp/$plugin"; \
   fi; \
 done
+
+# Add custom plugin
+ARG CUSTOMPLUGIN_RELEASEORG
+ARG CUSTOMPLUGIN_RELEASEREPO
+ARG CUSTOMPLUGIN_RELEASE_VERSION
+ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
+
+RUN wget -q -O ${SERVICE_PLUGIN_PATH}/Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip \
+    https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip
+
+
 
 # Cleanup
 RUN rm -rf /var/cache /tmp/* &&  \
