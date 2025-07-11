@@ -45,6 +45,24 @@ COPY halconfig/packer              /opt/rosco/config/packer
 
 WORKDIR /packer
 
+
+# Install system packages and tools
+RUN dnf -y update  gnutls  python3-idna python3-urllib3 libxml2  openldap  sqlite-libs glibc python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel \
+  && dnf clean all \
+  && dnf -y install java-17-openjdk-devel  git bash curl wget openssl net-tools  nettle binutils bzip2-libs-1.0.6-28.el8_10 ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8 \
+  && dnf -y install python3.12 python3.12-pip \
+  && dnf -y upgrade python3.12  python3-setuptools\
+  && rpm -q  python3-urllib3 libxml2 openldap sqlite-libs python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel python3.12 \
+  && dnf clean all
+
+# Install CVE fixed packages manually
+RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-17.el8_10.x86_64.rpm && \
+    rpm -Uvh --force expat-2.2.5-17.el8_10.x86_64.rpm && \
+    rm expat-2.2.5-17.el8_10.x86_64.rpm && \
+    wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
+    rpm -Uvh --force krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
+    rm krb5-libs-1.18.2-32.el8_10.x86_64.rpm
+
  ENV KUSTOMIZE_VERSION4=4.5.7
 # Install kustomize4
 RUN mkdir -p /tmp/kustomize4 && \
@@ -53,16 +71,6 @@ RUN mkdir -p /tmp/kustomize4 && \
   mv /tmp/kustomize4/kustomize /usr/local/bin/kustomize4 && \
   chmod +x /usr/local/bin/kustomize4 && \
   rm -rf /tmp/kustomize4
-
-# Install system packages and tools
-RUN dnf -y update  gnutls  python3-idna python3-urllib3 libxml2  openldap  sqlite-libs glibc python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel \
-  && dnf clean all \
-  && rpm -q  python3-urllib3 libxml2 openldap sqlite-libs python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel \
-  && dnf -y install java-17-openjdk-devel  git bash curl wget openssl net-tools  nettle binutils bzip2-libs-1.0.6-28.el8_10 ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8 \
-  && dnf -y install python3.12 python3.12-pip \
-  && dnf -y upgrade python3.12 \
-  && rpm -q python3.12 \
-  && dnf clean all
 
 # Install Packer
 RUN curl -Lo packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
@@ -85,14 +93,6 @@ RUN mkdir -p /tmp/kustomize && \
     chmod +x /usr/local/bin/kustomize && \
     rm -rf /tmp/kustomize
 
-# Install CVE fixed packages manually
-RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-17.el8_10.x86_64.rpm && \
-    rpm -Uvh --force expat-2.2.5-17.el8_10.x86_64.rpm && \
-    rm expat-2.2.5-17.el8_10.x86_64.rpm && \
-    wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
-    rpm -Uvh --force krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
-    rm krb5-libs-1.18.2-32.el8_10.x86_64.rpm
-
 # Install packer plugins
 ARG PACKER_PLUGINS="amazon azure googlecompute"
 RUN for plugin in $PACKER_PLUGINS ; do \
@@ -111,8 +111,6 @@ ARG CUSTOMPLUGIN_RELEASE_SRC_VERSION
 
 RUN wget -q -O ${SERVICE_PLUGIN_PATH}/Armory.armory-observability-plugin-${CUSTOMPLUGIN_RELEASE_VERSION}.zip \
     https://github.com/${CUSTOMPLUGIN_RELEASEORG}/${CUSTOMPLUGIN_RELEASEREPO}/releases/download/v${CUSTOMPLUGIN_RELEASE_SRC_VERSION}/armory-observability-plugin-v${CUSTOMPLUGIN_RELEASE_VERSION}-SNAPSHOT.zip
-
-
 
 # Cleanup
 RUN rm -rf /var/cache /tmp/* &&  \
