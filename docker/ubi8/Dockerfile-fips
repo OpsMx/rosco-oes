@@ -45,23 +45,38 @@ COPY halconfig/packer              /opt/rosco/config/packer
 
 WORKDIR /packer
 
+RUN dnf -y install \
+    git bash curl wget unzip tar openssl net-tools nettle glibc binutils \
+    libxml2 openldap sqlite-libs-3.26.0-20.el8_10 gnutls \
+    bzip2-libs-1.0.6-28.el8_10 \
+    ca-certificates-2024.2.69_v8.0.303-80.0.el8_10 \
+    gmp-6.1.2-11.el8 \
+    libarchive-3.3.3-6.el8_10 \
+    systemd systemd-libs systemd-pam libgcc libstdc++ \
+ && dnf clean all
 
-# Install system packages and tools      
-  RUN  dnf -y install pam-1.3.1-37.el8_10 git bash curl wget unzip tar openssl net-tools nettle glibc binutils bzip2-libs-1.0.6-28.el8_10 ca-certificates-2024.2.69_v8.0.303-80.0.el8_10  gmp-6.1.2-11.el8 \
-  && dnf -y update  gnutls  python3-idna python3-urllib3 libxml2 openldap  sqlite-libs  python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel-39.2.0-9.el8_10 \
-  && dnf clean all \                                                                            
-  && dnf -y install python3.12 python3.12-pip \
-  && dnf -y upgrade python3.12  python3-setuptools \
-  && rpm -q  python3-urllib3 libxml2 openldap sqlite-libs python3-pip-wheel python3-requests python3-rpm  python3-setuptools-wheel-39.2.0-9.el8_10 python3.12 \
-  && dnf clean all
+RUN dnf -y update \
+      python3-idna python3-urllib3 python3-pip-wheel python3-requests python3-rpm \
+  && dnf -y install python3.12 python3.12-pip python3-setuptools-wheel-39.2.0-9.el8_10 \
+  && dnf -y upgrade libssh libssh-config python3.12 \
+  && python3.12 -m pip install --no-cache-dir --upgrade pip setuptools \
+  && rpm -q python3-urllib3 python3-setuptools-wheel-39.2.0-9.el8_10 python3-requests python3-rpm python3.12 \
+  && python3.12 -m pip show setuptools
 
-# Install CVE fixed packages manually
+# Optional: clean up cached files 
+RUN dnf clean all && rm -rf /var/cache/dnf /root/.cache /tmp/*
+
+ # Install CVE fixed packages manually
 RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-17.el8_10.x86_64.rpm && \
     rpm -Uvh --force expat-2.2.5-17.el8_10.x86_64.rpm && \
     rm expat-2.2.5-17.el8_10.x86_64.rpm && \
     wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
     rpm -Uvh --force krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
-    rm krb5-libs-1.18.2-32.el8_10.x86_64.rpm
+    rm krb5-libs-1.18.2-32.el8_10.x86_64.rpm  && \
+    wget https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/baseos/os/Packages/p/pam-1.3.1-38.el8_10.x86_64.rpm && \
+    rpm -Uvh --force pam-1.3.1-38.el8_10.x86_64.rpm && \
+    rm pam-1.3.1-38.el8_10.x86_64.rpm
+
 
  ENV KUSTOMIZE_VERSION4=4.5.7
 # Install kustomize4
