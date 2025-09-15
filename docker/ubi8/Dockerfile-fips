@@ -67,7 +67,7 @@ RUN dnf -y update \
 RUN dnf clean all && rm -rf /var/cache/dnf /root/.cache /tmp/*
 
  # Install CVE fixed packages manually
-RUN wget https://tsn.miraclelinux.com/system/files/AXS8/x86_64/UPDATE/RPMS/expat-2.2.5-17.el8_10.x86_64.rpm && \
+RUN wget https://mirror.hnd.cl/almalinux/8/BaseOS/x86_64/os/Packages/expat-2.2.5-17.el8_10.x86_64.rpm && \
     rpm -Uvh --force expat-2.2.5-17.el8_10.x86_64.rpm && \
     rm expat-2.2.5-17.el8_10.x86_64.rpm && \
     wget https://fr2.rpmfind.net/linux/almalinux/8.10/BaseOS/x86_64/os/Packages/krb5-libs-1.18.2-32.el8_10.x86_64.rpm && \
