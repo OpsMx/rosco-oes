@@ -88,14 +88,14 @@ jobs:
         with:
           context: .
           file: docker/ubi8/Dockerfile-dev
-          push: true
+          push: false
           platforms: linux/amd64
           build-args: |
             TARGETARCH=amd64
-            CUSTOMPLUGIN_RELEASEORG=opsmx
-            CUSTOMPLUGIN_RELEASEREPO=armory-observability-plugin
-            CUSTOMPLUGIN_RELEASE_VERSION=1.0.1
-            CUSTOMPLUGIN_RELEASE_SRC_VERSION=1.0.6
+            CUSTOMPLUGIN_RELEASEORG=${{ steps.build_variables.outputs.CUSTOMPLUGIN_RELEASEORG }}
+            CUSTOMPLUGIN_RELEASEREPO=${{ steps.build_variables.outputs.CUSTOMPLUGIN_RELEASEREPO }}
+            CUSTOMPLUGIN_RELEASE_ZIP_VERSION=${{ steps.build_variables.outputs.CUSTOMPLUGIN_RELEASE_ZIP_VERSION }}
+            CUSTOMPLUGIN_RELEASE_SRC_VERSION=${{ steps.build_variables.outputs.CUSTOMPLUGIN_RELEASE_SRC_VERSION}}
           tags: |
             ${{ env.CONTAINER_REGISTRY }}/${{ steps.build_variables.outputs.REPO }}:${{ steps.build_variables.outputs.VERSION }}-${{ steps.build_variables.outputs.GITHASH }}-${{ steps.build_variables.outputs.BUILDDATE }}-dev
 
